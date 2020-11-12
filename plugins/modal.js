@@ -1,17 +1,17 @@
-Element.prototype.appendAfter = function(element){
+Element.prototype.appendAfter = function (element) {
     element.parentNode.insertBefore(this, element.nextSibling)
 }
-function noop(){
 
-}
-function _createModalFooter(buttons = []){
-    if(buttons.length === 0){
+function noop() {}
+
+function _createModalFooter(buttons = []) {
+    if (buttons.length === 0) {
         return document.createElement('div')
     }
     const wrap = document.createElement('div')
     wrap.classList.add('modal-footer')
 
-    buttons.forEach(btn =>{
+    buttons.forEach(btn => {
         const $btn = document.createElement('button');
         $btn.textContent = btn.text;
         $btn.classList.add('btn');
@@ -21,7 +21,6 @@ function _createModalFooter(buttons = []){
     })
     return wrap;
 }
-
 
 function _createModal(options) {
     const DEFAULT_WIDTH = '600px';
@@ -67,6 +66,9 @@ $.modal = function (options) {
             setTimeout(() => {
                 $modal.classList.remove('hide')
                 closing = false
+                if (typeof options.onClose === 'function') {
+                    options.onClose()
+                }
             }, ANIMATION_SPEED)
         }
     }
@@ -85,7 +87,7 @@ $.modal = function (options) {
             $modal.removeEventListener('click', listener);
             destroyed = true;
         },
-        setContent(html){
+        setContent(html) {
             $modal.querySelector('[data-content]').innerHTML = html;
         }
     })

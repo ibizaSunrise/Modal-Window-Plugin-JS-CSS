@@ -1,4 +1,4 @@
-const fruits = [
+let fruits = [
     { id: 1, title: 'Pineapple', price: 4, img: 'img/pineapple.jpg' },
     { id: 2, title: 'Apple', price: 1, img: 'img/apple.jpg' },
     { id: 3, title: 'Melon', price: 5, img: 'img/melon.jpg' }
@@ -12,7 +12,7 @@ const toHTML = fruit => `
                     <div class="card-body">
                       <h5 class="card-title">${fruit.title}</h5>
                       <a href="#" class="btn btn-primary" data-btn="price" data-id="${fruit.id}">Price</a>
-                      <a href="#" class="btn btn-danger">Delete</a>
+                      <a href="#" class="btn btn-danger" data-btn="remove" data-id="${fruit.id}">Delete</a>
                     </div>
                   </div>
             </div>
@@ -44,12 +44,21 @@ document.addEventListener('click', e => {
     const btnType = e.target.dataset.btn;
     const id = +e.target.dataset.id;
     const fruit = fruits.find(f => f.id === id);
-    priceModal.setContent(`
-        <p>Price for ${fruit.title}: <strong>${fruit.price}$</strong></p>
-    `)
-    if (btnType === 'price') {
-        priceModal.open()
 
-        console.log(id, fruit);
+    if (btnType === 'price') {
+        priceModal.setContent(`
+        <p>Price for ${fruit.title}: <strong>${fruit.price}$</strong></p>  
+    `)
+        priceModal.open()
+    } else if (btnType === 'remove') {
+        $.confirm({
+            title: 'Are You sure?',
+            content: `<p>You delet the <strong>${fruit.title}</strong></p>`,
+        }).then(() => {
+            fruits = fruits.filter(f => f.id !== id);
+            render();
+        }).catch(() => {
+            console.log('cansel')
+        })
     }
 })
